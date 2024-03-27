@@ -24,25 +24,40 @@ public class ConnectionManager {
 
 			System.out.println("연결 성공");
 
-			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO users (userid, username, userpassword, userage, useremail) VALUES (?,?,?,?,?)");
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO tb_users (UserId, UserPassword, UserName, UserEmail) VALUES (?,?,?,?)");
 			Scanner scanner = new Scanner(System.in);
 			while(true) {
 				System.out.print("아이디 입력 : ");
-				String userid = scanner.nextLine();
-				if (userid.equals("q")) break;
+				String UserId = scanner.nextLine();
+				if (UserId.equals("q")) break;
 
 				//입력 값을 설정 한다
-				pstmt.setString(1, userid);
-				pstmt.setString(2, "홍길동");
-				pstmt.setString(3, "1004");
-				pstmt.setInt(4, 20);
-				pstmt.setString(5, "hong1@naver.com");
-
-				System.out.println("입력된 아이디 : " + userid);
-
+				pstmt.setString(1, UserId);
+				
+				System.out.println("비밀번호 입력 : ");
+				String UserPassword = scanner.nextLine();
+				pstmt.setString(2, UserPassword);
+				
+				System.out.println("사용자 이름 입력 : ");
+				String UserName = scanner.nextLine();
+				pstmt.setString(3, UserName);
+				
+				System.out.println("이메일 입력 : ");
+				String UserEmail = scanner.nextLine();
+				pstmt.setString(4, UserEmail);
+				
+				
+				System.out.println("입력된 아이디 : " + UserId);
+				System.out.println("입력된 비밀번호 : " + UserPassword);
+				System.out.println("입력된 이름 : " + UserName);
+				System.out.println("입력된 이메일 : " + UserEmail);
+				
+				
 				int updated = pstmt.executeUpdate();
 				//변경된 건 수 
 				System.out.println("변경 건수  : " + updated);
+				
+				scanner.nextLine();
 			}
 
 
