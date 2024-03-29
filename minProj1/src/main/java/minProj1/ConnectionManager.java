@@ -107,10 +107,15 @@ public class ConnectionManager {
 				ResultSet rs = pstmt.executeQuery();
 				if(rs.next()) {
 					//찾고자 하는 자료가 있는 경우
-					userid = rs.getString("UserId");
-					String userpassword = rs.getString("UserPassword");
-					String username = rs.getString("UserName");
-					String useremail = rs.getString("UserEmail");
+					//userid = rs.getString("UserId");
+					userid = rs.getString(1);
+		
+					//String userpassword = rs.getString("UserPassword");
+					String userpassword = rs.getString(2);
+					//String username = rs.getString("UserName");
+					String username = rs.getString(3);
+					//String useremail = rs.getString("UserEmail");
+					String useremail = rs.getString(4);
 					
 					System.out.println("userid : " + userid);
 					System.out.println("userpassword : " + userpassword);
