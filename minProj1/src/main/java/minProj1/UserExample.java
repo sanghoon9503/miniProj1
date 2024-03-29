@@ -12,6 +12,22 @@ import java.util.Scanner;
 public class UserExample {
 	
 	private Scanner scanner = new Scanner(System.in);
+	private static Connection conn = null;
+	
+	static {
+		try {
+			conn = DriverManager.getConnection(
+					"jdbc:mariadb://localhost/miniproj1db",
+					"bituser", //계정이름 
+					"1004" //계정비밀번호
+					);
+			System.out.println("연결 성공");
+		} catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+	}
 	
 	public void UsersList() {
 		System.out.println();
@@ -20,21 +36,8 @@ public class UserExample {
 		System.out.printf("%-10s%-20s%-15s%-50s\n", "UserId", "UserPassword", "UserName", "UserEmail");
 		System.out.println("------------------------------------------------------------------------");
 		System.out.println();
-		
-		Connection conn = null;
+
 		try {
-			//JDBC Driver 등록
-			Class.forName("org.mariadb.jdbc.Driver");
-
-			//연결하기
-			conn = DriverManager.getConnection(
-					"jdbc:mariadb://localhost/miniproj1db",
-					"bituser", //계정이름 
-					"1004" //계정비밀번호
-					);
-
-			System.out.println("연결 성공");
-			
 			PreparedStatement pstmt = conn.prepareStatement("select * from tb_users");
 			ResultSet rs = pstmt.executeQuery();
 			
@@ -63,22 +66,10 @@ public class UserExample {
 			
 			rs.close();
 			pstmt.close();
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
-		//여기서 연결을 끊어버리면 안된다
-			finally {
-			if(conn != null) {
-				try {
-					//연결 끊기
-					conn.close();
-					System.out.println("연결 끊기");
-				} catch (SQLException e) {}
-			}
-		}
 		MainMenu();
 	}
 	
@@ -114,21 +105,7 @@ public class UserExample {
 		String menuNO = scanner.nextLine();
 		if(menuNO.equals("1")) {
 		
-			Connection conn = null;
-			
 			try {
-				//JDBC Driver 등록
-				Class.forName("org.mariadb.jdbc.Driver");
-	
-				//연결하기
-				conn = DriverManager.getConnection(
-						"jdbc:mariadb://localhost/miniproj1db",
-						"bituser", //계정이름 
-						"1004" //계정비밀번호
-						);
-	
-				System.out.println("연결 성공");
-	
 				PreparedStatement pstmt = conn.prepareStatement("insert into tb_users(userid, userpassword, username, useremail) values(?,?,?,?)");
 				
 						pstmt.setString(1, userid);
@@ -141,19 +118,9 @@ public class UserExample {
 						
 						pstmt.close();
 					
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
 			} catch (SQLException e) {
 				e.printStackTrace();
-			} finally {
-				if(conn != null) {
-					try {
-						//연결 끊기
-						conn.close();
-						System.out.println("연결 끊기");
-					} catch (SQLException e) {}
-				}
-			}
+			} 
 		}
 		UsersList();
 	}
@@ -163,21 +130,9 @@ public class UserExample {
 		System.out.println("userid : ");
 		
 		String userid = scanner.nextLine();
-		
-		Connection conn = null;
+
 		try {
-			//JDBC Driver 등록
-			Class.forName("org.mariadb.jdbc.Driver");
-
-			//연결하기
-			conn = DriverManager.getConnection(
-					"jdbc:mariadb://localhost/miniproj1db",
-					"bituser", //계정이름 
-					"1004" //계정비밀번호
-					);
-
-			System.out.println("연결 성공");
-
+			
 			PreparedStatement pstmt = conn.prepareStatement("select * from tb_users where userid=?");
 			
 			//입력 값 설정
@@ -225,19 +180,9 @@ public class UserExample {
 			}
 			rs.close();
 			pstmt.close();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if(conn != null) {
-				try {
-					//연결 끊기
-					conn.close();
-					System.out.println("연결 끊기");
-				} catch (SQLException e) {}
-			}
 		}
 	}
 
@@ -256,17 +201,6 @@ public class UserExample {
 		System.out.println("메뉴 선택 : ");
 		String menuNo = scanner.nextLine();
 		
-		try {
-			PreparedStatement pstmt = conn.prepareStatement("delete from tb_users where userid=?");
-			pstmt.setString(1, userid);
-			
-			int updated = pstmt.executeUpdate();
-			pstmt.close();
-			System.out.println("삭제된 건 수 : " + updated);
-			
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}
 		UsersList();
 		
 	}
@@ -286,7 +220,7 @@ public class UserExample {
 		UsersList();
 	}
 	
-	public void exit() {
+	public void Exit() {
 		System.exit(0);
 	}
 	
