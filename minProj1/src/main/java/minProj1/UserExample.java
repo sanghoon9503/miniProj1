@@ -13,6 +13,12 @@ public class UserExample {
 	
 	private Scanner scanner = new Scanner(System.in);
 	private static Connection conn = null;
+	private static PreparedStatement UserListPstmt = null;
+	//다른 객체도 정적화 하여 한곳에 모은다.
+	private static PreparedStatement UserInsertPstmt = null;
+	private static PreparedStatement UserReadPstmt = null;
+	private static PreparedStatement UserDeletePstmt = null;
+	
 	
 	static {
 		try {
@@ -22,8 +28,12 @@ public class UserExample {
 					"1004" //계정비밀번호
 					);
 			System.out.println("연결 성공");
-		} catch(ClassNotFoundException e) {
-			e.printStackTrace();
+			
+			UserListPstmt = conn.prepareStatement("select * from tb_users");
+			UserInsertPstmt = conn.prepareStatement("insert into tb_users(userid, userpassword, username, useremail) values(?,?,?,?)");
+			UserReadPstmt = conn.prepareStatement("select * from tb_users where userid=?");
+			UserDeletePstmt = conn.prepareStatement("delete from tb_users where userid=?");
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
@@ -38,8 +48,9 @@ public class UserExample {
 		System.out.println();
 
 		try {
-			PreparedStatement pstmt = conn.prepareStatement("select * from tb_users");
-			ResultSet rs = pstmt.executeQuery();
+			//이 게시물 목록을 위한 객체를 정적 멤버 변수로 선언했으므로 이 "UsersList()"메소드에서 쓸 필요 없다.
+			//PreparedStatement pstmt = conn.prepareStatement("select * from tb_users");
+			ResultSet rs = UserListPstmt.executeQuery();
 			
 			//등록된 회원이 없을때를 위한 변수
 			boolean uExistData = false;
@@ -65,7 +76,7 @@ public class UserExample {
 			}
 			
 			rs.close();
-			pstmt.close();
+			//pstmt.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -106,17 +117,17 @@ public class UserExample {
 		if(menuNO.equals("1")) {
 		
 			try {
-				PreparedStatement pstmt = conn.prepareStatement("insert into tb_users(userid, userpassword, username, useremail) values(?,?,?,?)");
+				//PreparedStatement pstmt = conn.prepareStatement("insert into tb_users(userid, userpassword, username, useremail) values(?,?,?,?)");
 				
-						pstmt.setString(1, userid);
-						pstmt.setString(2, userpassword);
-						pstmt.setString(3, username);
-						pstmt.setString(4, useremail);
+						UserInsertPstmt.setString(1, userid);
+						UserInsertPstmt.setString(2, userpassword);
+						UserInsertPstmt.setString(3, username);
+						UserInsertPstmt.setString(4, useremail);
 						
-						int updated = pstmt.executeUpdate();
+						int updated = UserInsertPstmt.executeUpdate();
 						System.out.println("입력 건수 : " + updated);
 						
-						pstmt.close();
+						UserInsertPstmt.close();
 					
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -133,12 +144,12 @@ public class UserExample {
 
 		try {
 			
-			PreparedStatement pstmt = conn.prepareStatement("select * from tb_users where userid=?");
+			//PreparedStatement pstmt = conn.prepareStatement("select * from tb_users where userid=?");
 			
 			//입력 값 설정
-			pstmt.setString(1, userid);
+			UserReadPstmt.setString(1, userid);
 			
-			ResultSet rs = pstmt.executeQuery();
+			ResultSet rs = UserReadPstmt.executeQuery();
 			//그 입력한 id가 있을 때
 			if(rs.next()) {
 				userid = rs.getString(1);
@@ -179,7 +190,6 @@ public class UserExample {
 				System.out.println("[" + userid + "]에 대한 자료가 존재하지 않습니다.");
 			}
 			rs.close();
-			pstmt.close();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -207,11 +217,11 @@ public class UserExample {
 	
 	public void Delete(String userid) {
 		try {
-			PreparedStatement pstmt = conn.prepareStatement("delete from tb_users where userid=?");
-			pstmt.setString(1, userid);
+			UserDeletePstmt.setString(1, userid);
 			
-			int updated = pstmt.executeUpdate();
-			pstmt.close();
+			int updated = UserDeletePstmt.executeUpdate();
+			UserDeletePstmt.close();
+			//UserDeletePstmt.commit();
 			System.out.println("삭제된 건 수 : " + updated);
 			
 		}catch(SQLException e) {
