@@ -12,32 +12,8 @@ import java.util.Scanner;
 public class UserExample {
 	
 	private Scanner scanner = new Scanner(System.in);
-	private static Connection conn = null;
-	private static PreparedStatement UserListPstmt = null;
-	//다른 객체도 정적화 하여 한곳에 모은다.
-	private static PreparedStatement UserInsertPstmt = null;
-	private static PreparedStatement UserReadPstmt = null;
-	private static PreparedStatement UserDeletePstmt = null;
 	
-	
-	static {
-		try {
-			conn = DriverManager.getConnection(
-					"jdbc:mariadb://localhost/miniproj1db",
-					"bituser", //계정이름 
-					"1004" //계정비밀번호
-					);
-			System.out.println("연결 성공");
-			
-			UserListPstmt = conn.prepareStatement("select * from tb_users");
-			UserInsertPstmt = conn.prepareStatement("insert into tb_users(userid, userpassword, username, useremail) values(?,?,?,?)");
-			UserReadPstmt = conn.prepareStatement("select * from tb_users where userid=?");
-			UserDeletePstmt = conn.prepareStatement("delete from tb_users where userid=?");
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} 
-	}
+	UsersDAO usersDAO;
 	
 	public void UsersList() {
 		System.out.println();
