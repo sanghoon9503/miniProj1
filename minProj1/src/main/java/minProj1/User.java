@@ -11,13 +11,13 @@ public class User {
 	private String username;
 	private String useremail;
 	
-	public User(String userid, String password, String username, String useremail)
-	{
-		this.userid = userid;
-		this.userpassword = userpassword;
-		this.username = username;
-		this.useremail = useremail;
-	}
+//	public User(String userid, String password, String username, String useremail)
+//	{
+//		this.userid = userid;
+//		this.userpassword = userpassword;
+//		this.username = username;
+//		this.useremail = useremail;
+//	}
 	
 	public void print() {
 		System.out.printf("%-10s%-20s%-15s%-50s\n", 
