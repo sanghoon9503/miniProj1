@@ -55,7 +55,7 @@ public class UsersDAO {
 		return list;
 	}
 	
-	public int insert(User user) {
+	public int Insert(User user) {
 		int updated = 0;
 		try{
 			UserInsertPstmt.setString(1, user.getUserid());
@@ -73,7 +73,7 @@ public class UsersDAO {
 	}
 	
 	
-	public User read(String userid) {
+	public User Read(String userid) {
 		User user = null;
 		try {
 			UserReadPstmt.setString(1, userid);
@@ -96,7 +96,7 @@ public class UsersDAO {
 		return 0;
 	}
 	
-	public int delete(int user) {
+	public int Delete(int user) {
 		int updated = 0;
 		try {
 				UserDeletePstmt.setString(1, userid);
